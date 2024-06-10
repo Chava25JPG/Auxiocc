@@ -1,0 +1,170 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "androidx.navigation.safeargs.kotlin"
+    id "com.diffplug.spotless"
+    id "kotlin-parcelize"
+    id "dagger.hilt.android.plugin"
+    id "kotlin-kapt"
+    id "com.google.devtools.ksp"
+    id "org.jetbrains.kotlin.android"
+}
+
+android {
+    compileSdk 34
+    ndkVersion = "25.2.9519653"
+    namespace "org.oxycblt.auxio"
+
+    defaultConfig {
+        applicationId namespace
+        versionName "3.5.0-dev"
+        versionCode 45
+
+        minSdk 24
+        targetSdk 34
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+        freeCompilerArgs += "-Xjvm-default=all"
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-DEBUG"
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+
+            dependenciesInfo {
+                includeInApk = false
+                includeInBundle = false
+            }
+        }
+    }
+
+    packagingOptions {
+        jniLibs {
+            excludes += ['**/kotlin/**', '**/okhttp3/**']
+        }
+        resources {
+            excludes += ['DebugProbesKt.bin', 'kotlin-tooling-metadata.json', '**/kotlin/**', '**/okhttp3/**', 'META-INF/*.version']
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+    dependenciesInfo {
+        includeInApk false
+        includeInBundle false
+    }
+    buildToolsVersion '34.0.0'
+}
+
+dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    def coroutines_version = '1.7.2'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutines_version"
+
+    // --- SUPPORT ---
+
+    // General
+    implementation 'com.arthenica:mobile-ffmpeg-full:4.4.LTS'
+    implementation "androidx.core:core-ktx:1.13.0"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.activity:activity-ktx:1.9.0"
+    implementation "androidx.fragment:fragment-ktx:1.6.2"
+
+    // Components
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
+    // Lifecycle
+    def lifecycle_version = "2.7.0"
+    implementation "androidx.lifecycle:lifecycle-common:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+
+    // Media
+    implementation "androidx.media:media:1.7.0"
+
+    // Preferences
+    implementation "androidx.preference:preference-ktx:1.2.1"
+
+    // Database
+    def room_version = '2.6.1'
+    implementation "androidx.room:room-runtime:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+
+    // --- THIRD PARTY ---
+
+    // Exoplayer (Vendored)
+    implementation project(":media-lib-session")
+    implementation project(":media-lib-exoplayer")
+    implementation project(":media-lib-decoder-ffmpeg")
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.4"
+
+    // Image loading
+    implementation 'io.coil-kt:coil-base:2.4.0'
+
+    // Material
+    implementation "com.google.android.material:material:1.13.0-alpha01"
+
+    // Dependency Injection
+    implementation "com.google.dagger:dagger:$hilt_version"
+    kapt "com.google.dagger:dagger-compiler:$hilt_version"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    // Logging
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    // Speed dial
+    implementation "com.leinardi.android:speed-dial:3.3.0"
+
+    // Testing
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "io.mockk:mockk:1.13.7"
+    testImplementation "org.robolectric:robolectric:4.11"
+    testImplementation 'androidx.test:core-ktx:1.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+spotless {
+    kotlin {
+        target "src/**/*.kt"
+        ktfmt().dropboxStyle()
+        licenseHeaderFile("NOTICE")
+    }
+}
+
+afterEvaluate {
+    preDebugBuild.dependsOn spotlessApply
+}

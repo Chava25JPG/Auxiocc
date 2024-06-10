@@ -1,0 +1,109 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="108dp"
+            android:height="108dp"
+            android:viewportWidth="108"
+            android:viewportHeight="108">
+            <group
+                android:name="bg"
+                android:pivotX="56"
+                android:pivotY="56">
+                <path
+                    android:fillColor="#eef0ff"
+                    android:pathData="M 136,54 A 82,82 0 0 1 54,136 82,82 0 0 1 -28,54 82,82 0 0 1 54,-28 82,82 0 0 1 136,54 Z"
+                    android:strokeColor="#00000000" />
+            </group>
+
+            <group
+                android:name="top_left_block"
+                android:pivotX="54"
+                android:pivotY="54"
+                android:rotation="40"
+                android:translateX="16"
+                android:translateY="-32">
+                <path
+                    android:fillColor="#94AAE4"
+                    android:pathData="m -19,5e-7 h 38 c 4.432,0 8,3.568 8,8 V 100 c 0,4.432 -3.568,8 -8,8 h -38 c -4.432,0 -8,-3.568 -8,-8 V 8.0000005 c 0,-4.432 3.568,-8 8,-8 z"
+                    android:strokeColor="#00000000" />
+            </group>
+
+            <group
+                android:name="bottom_right_block"
+                android:pivotX="54"
+                android:pivotY="54"
+                android:rotation="40"
+                android:translateX="-16"
+                android:translateY="32">
+                <path
+                    android:fillColor="#B1C6FF"
+                    android:pathData="m 89,0 h 38 c 4.432,0 8,3.568 8,8 V 99.999999 C 135,104.432 131.432,108 127,108 H 89 c -4.432,0 -8,-3.568 -8,-8.000001 V 8 c 0,-4.432 3.568,-8 8,-8 z"
+                    android:strokeColor="#00000000" />
+            </group>
+
+            <group
+                android:scaleX="2.835"
+                android:scaleY="2.835"
+                android:translateX="19.98"
+                android:translateY="19.98">
+                <path
+                    android:name="note"
+                    android:fillColor="@android:color/transparent"
+                    android:pathData="M13 4l4 4m-4-4v13m0 0l-3 3-3-3 3-3"
+                    android:strokeWidth="0"
+                    android:strokeColor="#475d92"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="round" />
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="bg">
+        <aapt:attr name="android:animation">
+            <set></set>
+        </aapt:attr>
+    </target>
+    <target android:name="top_left_block">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="1000"
+                    android:interpolator="@interpolator/m3_sys_motion_easing_emphasized_decelerate"
+                    android:propertyName="rotation"
+                    android:startOffset="0"
+                    android:valueFrom="90"
+                    android:valueTo="15"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="bottom_right_block">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="1000"
+                    android:interpolator="@interpolator/m3_sys_motion_easing_emphasized_decelerate"
+                    android:propertyName="rotation"
+                    android:startOffset="0"
+                    android:valueFrom="90"
+                    android:valueTo="15"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="note">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="1000"
+                    android:interpolator="@interpolator/m3_sys_motion_easing_emphasized_decelerate"
+                    android:propertyName="strokeWidth"
+                    android:startOffset="0"
+                    android:valueFrom="0"
+                    android:valueTo="2"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>
