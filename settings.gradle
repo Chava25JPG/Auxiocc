@@ -7,14 +7,13 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS) // O usa PREFER_PROJECT
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        jcenter()  // Solo si es necesario, ya que jcenter está siendo eliminado gradualmente
     }
 }
-
 
 gradle.ext.androidxMediaModulePrefix = 'media-'
 gradle.ext.androidxMediaProjectName = 'media-'
