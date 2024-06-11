@@ -16,6 +16,10 @@ jobs:
             - ~/.gradle
           key: android-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
+          name: Instalar NDK
+          command: |
+            echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;25.0.8775105"
+      - run:
           name: Compilar proyecto
           command: ./gradlew assembleRelease
       - store_artifacts:
@@ -23,6 +27,10 @@ jobs:
           destination: apks
 
 workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
   version: 2
   build_and_test:
     jobs:
