@@ -12,10 +12,6 @@ plugins {
 
 android {
     compileSdk 34
-    // NDK is not used in Auxio explicitly (used in the ffmpeg extension), but we need to specify
-    // it here so that binary stripping will work.
-    // TODO: Eventually you might just want to start vendoring the FFMpeg extension so the
-    //  NDK use is unified
     ndkVersion = "25.2.9519653"
     namespace "org.oxycblt.auxio"
 
@@ -28,6 +24,13 @@ android {
         targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86', 'x86_64' // Especifica las arquitecturas compatibles aquí
+        }
+    
+        
+        
     }
 
     compileOptions {
