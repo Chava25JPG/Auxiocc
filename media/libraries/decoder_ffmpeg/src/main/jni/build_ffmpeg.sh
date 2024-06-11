@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -eu
 
 # Setup
@@ -34,17 +33,35 @@ git clone https://github.com/FFmpeg/FFmpeg.git ffmpeg
 cd ffmpeg
 
 # Build for each architecture
-for ARCH in armeabi-v7a arm64-v8a x86 x86_64; do
+for ARCH in armeabi-v7a x86 x86_64; do
     echo "Configuring FFmpeg for ${ARCH}..."
-    CC="${TOOLCHAIN_PREFIX}/armv7a-linux-androideabi${ANDROID_ABI}-clang"
-    CXX="${TOOLCHAIN_PREFIX}/armv7a-linux-androideabi${ANDROID_ABI}-clang++"
+
+    case "${ARCH}" in
+        armeabi-v7a)
+            CC="${TOOLCHAIN_PREFIX}/armv7a-linux-androideabi${ANDROID_ABI}-clang"
+            CXX="${TOOLCHAIN_PREFIX}/armv7a-linux-androideabi${ANDROID_ABI}-clang++"
+            EXTRA_CFLAGS="-march=armv7-a -mfloat-abi=softfp"
+            EXTRA_LDFLAGS="-Wl,--fix-cortex-a8"
+            ;;
+        x86)
+            CC="${TOOLCHAIN_PREFIX}/i686-linux-android${ANDROID_ABI}-clang"
+            CXX="${TOOLCHAIN_PREFIX}/i686-linux-android${ANDROID_ABI}-clang++"
+            EXTRA_CFLAGS=""
+            EXTRA_LDFLAGS=""
+            ;;
+        x86_64)
+            CC="${TOOLCHAIN_PREFIX}/x86_64-linux-android${ANDROID_ABI}-clang"
+            CXX="${TOOLCHAIN_PREFIX}/x86_64-linux-android${ANDROID_ABI}-clang++"
+            EXTRA_CFLAGS=""
+            EXTRA_LDFLAGS=""
+            ;;
+    esac
 
     # Verify that the compilers exist
     if [[ ! -x "$CC" ]]; then
         echo "Compiler not found: $CC"
         exit 1
     fi
-
     if [[ ! -x "$CXX" ]]; then
         echo "Compiler not found: $CXX"
         exit 1
@@ -52,25 +69,27 @@ for ARCH in armeabi-v7a arm64-v8a x86 x86_64; do
 
     ./configure \
         --libdir=android-libs/${ARCH} \
-        --arch=arm \
-        --cpu=armv7-a \
-        --cross-prefix="${TOOLCHAIN_PREFIX}/armv7a-linux-androideabi${ANDROID_ABI}-" \
+        --arch=${ARCH} \
+        --cpu=${ARCH} \
+        --cross-prefix="${TOOLCHAIN_PREFIX}/${ARCH}-linux-android${ANDROID_ABI}-" \
         --cc="$CC" \
         --cxx="$CXX" \
         --nm="${TOOLCHAIN_PREFIX}/llvm-nm" \
         --ar="${TOOLCHAIN_PREFIX}/llvm-ar" \
         --ranlib="${TOOLCHAIN_PREFIX}/llvm-ranlib" \
         --strip="${TOOLCHAIN_PREFIX}/llvm-strip" \
-        --extra-cflags="-march=armv7-a -mfloat-abi=softfp" \
-        --extra-ldflags="-Wl,--fix-cortex-a8" \
+        --extra-cflags="${EXTRA_CFLAGS}" \
+        --extra-ldflags="${EXTRA_LDFLAGS}" \
         ${COMMON_OPTIONS}
+
     make -j${JOBS}
     make install-libs
+
     if [[ ! -f "android-libs/${ARCH}/libswresample.a" ]]; then
         echo "Error: libswresample.a not found for ${ARCH}"
         exit 1
     fi
+
     make clean
 done
-
 
