@@ -12,6 +12,10 @@ plugins {
 
 android {
     compileSdk 34
+    // NDK is not used in Auxio explicitly (used in the ffmpeg extension), but we need to specify
+    // it here so that binary stripping will work.
+    // TODO: Eventually you might just want to start vendoring the FFMpeg extension so the
+    //  NDK use is unified
     ndkVersion = "25.2.9519653"
     namespace "org.oxycblt.auxio"
 
@@ -67,11 +71,6 @@ android {
     buildFeatures {
         viewBinding true
     }
-    dependenciesInfo {
-        includeInApk false
-        includeInBundle false
-    }
-    buildToolsVersion '34.0.0'
 }
 
 dependencies {
@@ -87,13 +86,16 @@ dependencies {
     // --- SUPPORT ---
 
     // General
-    implementation 'com.arthenica:mobile-ffmpeg-full:4.4.LTS'
     implementation "androidx.core:core-ktx:1.13.0"
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "androidx.activity:activity-ktx:1.9.0"
     implementation "androidx.fragment:fragment-ktx:1.6.2"
 
     // Components
+    // Deliberately kept on 1.2.1 to prevent a bug where the queue sheet will not collapse on
+    // certain upwards scrolling events
+    // TODO: Report this issue and hope for a timely fix
+    // noinspection GradleDependency
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
@@ -133,6 +135,8 @@ dependencies {
     implementation 'io.coil-kt:coil-base:2.4.0'
 
     // Material
+    // TODO: Exactly figure out the conditions that the 1.7.0 ripple bug occurred so you can just
+    //  PR a fix.
     implementation "com.google.android.material:material:1.13.0-alpha01"
 
     // Dependency Injection
