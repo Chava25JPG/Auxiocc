@@ -18,8 +18,8 @@ jobs:
       - run:
           name: Instalar NDK
           command: |
-            echo "y" | sudo ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;25.0.8775105"
-            echo 'export ANDROID_NDK_HOME=${ANDROID_HOME}/ndk/25.0.8775105' >> $BASH_ENV
+            echo "y" | sudo ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;25.2.9519653"
+            echo 'export ANDROID_NDK_HOME=${ANDROID_HOME}/ndk/25.2.9519653' >> $BASH_ENV
             source $BASH_ENV
       - run:
           name: Compilar proyecto
